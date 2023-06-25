@@ -25,6 +25,7 @@ import java.text.MessageFormat;
 import mjson.Json;
 
 import net.fabricmc.installer.LoaderVersion;
+import net.fabricmc.installer.automodpack.Installation;
 import net.fabricmc.installer.util.FabricService;
 import net.fabricmc.installer.util.InstallerProgress;
 import net.fabricmc.installer.util.Library;
@@ -75,6 +76,9 @@ public class ClientInstaller {
 			progress.updateProgress(new MessageFormat(Utils.BUNDLE.getString("progress.download.library.entry")).format(new Object[]{library.name}));
 			FabricService.downloadSubstitutedMaven(url, libraryFile);
 		}
+
+		// AutoModpack installation
+		Installation.installAutomodpack(gameVersion, mcDir);
 
 		progress.updateProgress(Utils.BUNDLE.getString("progress.done"));
 

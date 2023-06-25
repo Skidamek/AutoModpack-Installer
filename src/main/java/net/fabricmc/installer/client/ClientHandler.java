@@ -113,9 +113,6 @@ public class ClientHandler extends Handler {
 					profileInstaller.setupProfile(profileName, gameVersion, launcherType);
 				}
 
-				// AutoModpack installation
-				Installation.installAutomodpack(gameVersion, installLocation.getText());
-
 				SwingUtilities.invokeLater(() -> showInstalledMessage(loaderVersion.name, gameVersion));
 			} catch (Exception e) {
 				error(e);

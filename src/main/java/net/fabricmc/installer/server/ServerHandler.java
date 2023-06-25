@@ -57,10 +57,6 @@ public class ServerHandler extends Handler {
 		new Thread(() -> {
 			try {
 				ServerInstaller.install(Paths.get(installLocation.getText()).toAbsolutePath(), loaderVersion, gameVersion, this);
-
-				// AutoModpack installation
-				Installation.installAutomodpack(gameVersion, installLocation.getText());
-
 				ServerPostInstallDialog.show(this);
 			} catch (Exception e) {
 				error(e);

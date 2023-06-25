@@ -5,14 +5,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class Installation {
-	public static void installAutomodpack(String gameVersion, String installLocation) {
+	public static void installAutomodpack(String gameVersion, Path mcPath) {
 		String url = ModrinthAPI.getLatestDownloadUrl(gameVersion);
 
-		Path mcPath = Paths.get(installLocation);
 		Path targetDirectory = mcPath.resolve("mods");
 
 		try {
