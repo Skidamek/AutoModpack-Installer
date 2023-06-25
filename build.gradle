@@ -10,10 +10,10 @@ plugins {
 
 sourceCompatibility = 1.8
 version = '0.11.2'
-archivesBaseName = "fabric-installer"
+archivesBaseName = "automodpack-fabric-installer"
 
 def ENV = System.getenv()
-version = version + (ENV.GITHUB_ACTIONS ? "" : "+local")
+//version = version + (ENV.GITHUB_ACTIONS ? "" : "+local")
 
 repositories {
 	maven {
@@ -41,10 +41,6 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
-
-	if (JavaVersion.current().isJava9Compatible()) {
-		it.options.release = 8
-	}
 }
 
 checkstyle {

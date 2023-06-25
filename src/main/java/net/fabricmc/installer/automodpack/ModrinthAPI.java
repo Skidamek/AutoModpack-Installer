@@ -34,6 +34,7 @@ public class ModrinthAPI {
 	public static String getLatestDownloadUrl(String gameVersion) {
 		String apiUrl = buildApiUrl(gameVersion);
 		Json json = fetchJson(apiUrl);
+
 		if (json == null) {
 			return null;
 		}
@@ -48,6 +49,7 @@ public class ModrinthAPI {
 
 		String apiUrl = BASE_URL.replaceAll("\"", "%22");
 		Json json = fetchJson(apiUrl);
+
 		if (json == null) {
 			return null;
 		}

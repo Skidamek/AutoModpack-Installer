@@ -36,7 +36,6 @@ import javax.swing.JPanel;
 import net.fabricmc.installer.Handler;
 import net.fabricmc.installer.InstallerGui;
 import net.fabricmc.installer.LoaderVersion;
-import net.fabricmc.installer.automodpack.Installation;
 import net.fabricmc.installer.util.ArgumentParser;
 import net.fabricmc.installer.util.InstallerProgress;
 import net.fabricmc.installer.util.Reference;

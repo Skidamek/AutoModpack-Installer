@@ -16,19 +16,15 @@
 
 package net.fabricmc.installer.client;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.awt.Desktop;
 import java.awt.GridBagConstraints;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
-import java.net.URL;
 
 import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
@@ -40,9 +36,7 @@ import javax.swing.event.HyperlinkEvent;
 import net.fabricmc.installer.Handler;
 import net.fabricmc.installer.InstallerGui;
 import net.fabricmc.installer.LoaderVersion;
-import net.fabricmc.installer.automodpack.Installation;
 import net.fabricmc.installer.launcher.MojangLauncherHelperWrapper;
-import net.fabricmc.installer.automodpack.ModrinthAPI;
 import net.fabricmc.installer.util.ArgumentParser;
 import net.fabricmc.installer.util.InstallerProgress;
 import net.fabricmc.installer.util.Reference;
