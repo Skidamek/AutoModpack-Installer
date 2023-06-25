@@ -41,7 +41,7 @@ public class Main {
 			System.setProperty("javax.net.ssl.trustStoreType", "WINDOWS-ROOT");
 		}
 
-		System.out.println("Loading Fabric Installer: " + Main.class.getPackage().getImplementationVersion());
+		System.out.println("Loading AutoModpack Fabric Installer: " + Main.class.getPackage().getImplementationVersion());
 
 		HANDLERS.add(new ClientHandler());
 		HANDLERS.add(new ServerHandler());
