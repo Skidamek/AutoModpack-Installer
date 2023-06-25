@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.Box;
@@ -45,6 +46,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import net.fabricmc.installer.modrinthAPI.ModrinthAPI;
 import net.fabricmc.installer.util.ArgumentParser;
 import net.fabricmc.installer.util.InstallerProgress;
 import net.fabricmc.installer.util.MetaHandler;
@@ -158,9 +160,17 @@ public abstract class Handler implements InstallerProgress {
 	private void updateGameVersions() {
 		gameVersionComboBox.removeAllItems();
 
+		List<String> supportedVersions = ModrinthAPI.getSupportedMinecraftVersions();
+
 		for (MetaHandler.GameVersion version : Main.GAME_VERSION_META.getVersions()) {
 			if (!snapshotCheckBox.isSelected() && !version.isStable()) {
 				continue;
+			}
+
+			if (supportedVersions != null) {
+				if (!supportedVersions.contains(version.getVersion())) {
+					continue;
+				}
 			}
 
 			gameVersionComboBox.addItem(version.getVersion());

@@ -21,39 +21,92 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import mjson.Json;
 
 public class ModrinthAPI {
-	public static String getLatestDownloadUrl(String gameVersion) throws IOException {
-		String apiUrl = "https://api.modrinth.com/v2/project/k68glP2e/version?game_versions=[\"" + gameVersion + "\"]&loaders=[\"fabric\"]";
-		apiUrl = apiUrl.replaceAll("\"", "%22"); // so important!
+	private static final String BASE_URL = "https://api.modrinth.com/v2/project/k68glP2e/version?loaders=[\"fabric\"]";
+	private static final List<String> gameVersionsFinal = new ArrayList<>();
 
-		// Effettua la richiesta GET all'API di Modrinth
+	public static String getLatestDownloadUrl(String gameVersion) throws IOException {
+		String apiUrl = buildApiUrl(gameVersion);
+		String response = getApiResponse(apiUrl);
+		Json json = Json.read(response);
+		return extractDownloadUrl(json);
+	}
+
+	public static List<String> getSupportedMinecraftVersions() {
+		if (!gameVersionsFinal.isEmpty()) {
+			return gameVersionsFinal;
+		}
+
+		String apiUrl = BASE_URL.replaceAll("\"", "%22");
+		Json json = fetchJson(apiUrl);
+		if (json == null) {
+			return null;
+		}
+
+		populateGameVersions(json);
+		return gameVersionsFinal;
+	}
+
+	private static String buildApiUrl(String gameVersion) {
+		String apiUrl = BASE_URL + "&game_versions=[\"" + gameVersion + "\"]";
+		return apiUrl.replaceAll("\"", "%22");
+	}
+
+	private static String getApiResponse(String apiUrl) throws IOException {
 		URL url = new URL(apiUrl);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("GET");
+		connection.setRequestProperty("User-Agent", "Skidamek/AutoModpack-Installer/1.0");
 
-		// Imposta l'header User-Agent
-		connection.setRequestProperty("User-Agent", "alepagliaccio/automodpack/1.0 (alessandropiccin.com)");
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+			StringBuilder response = new StringBuilder();
+			String line;
 
-		// Legge la risposta JSON
-		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			while ((line = reader.readLine()) != null) {
+				response.append(line);
+			}
 
-		StringBuilder response = new StringBuilder();
-		String line;
-
-		while ((line = reader.readLine()) != null) {
-			response.append(line);
+			return response.toString();
 		}
+	}
 
-		reader.close();
-
-		// Analizza la risposta JSON
-		Json json = Json.read(response.toString());
+	private static String extractDownloadUrl(Json json) {
 		Json version = json.at(0);
-		String downloadUrl = version.at("files").at(0).at("url").asString();
+		return version.at("files").at(0).at("url").asString();
+	}
 
-		return downloadUrl;
+	private static Json fetchJson(String apiUrl) {
+		try {
+			String response = getApiResponse(apiUrl);
+			return Json.read(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private static void populateGameVersions(Json json) {
+		for (int i = 0; i < json.asJsonList().size(); i++) {
+			Json version = json.at(i);
+			List<Object> gameVersions = version.at("game_versions").asList();
+
+			for (Object gameVersion : gameVersions) {
+				String gameVersionString = Objects.toString(gameVersion, null);
+
+				if (gameVersionString == null) {
+					continue;
+				}
+
+				if (!gameVersionsFinal.contains(gameVersionString)) {
+					gameVersionsFinal.add(gameVersionString);
+				}
+			}
+		}
 	}
 }
