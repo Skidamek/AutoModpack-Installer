@@ -40,8 +40,9 @@ import javax.swing.event.HyperlinkEvent;
 import net.fabricmc.installer.Handler;
 import net.fabricmc.installer.InstallerGui;
 import net.fabricmc.installer.LoaderVersion;
+import net.fabricmc.installer.automodpack.Installation;
 import net.fabricmc.installer.launcher.MojangLauncherHelperWrapper;
-import net.fabricmc.installer.modrinthAPI.ModrinthAPI;
+import net.fabricmc.installer.automodpack.ModrinthAPI;
 import net.fabricmc.installer.util.ArgumentParser;
 import net.fabricmc.installer.util.InstallerProgress;
 import net.fabricmc.installer.util.Reference;
@@ -112,51 +113,14 @@ public class ClientHandler extends Handler {
 					profileInstaller.setupProfile(profileName, gameVersion, launcherType);
 				}
 
+				// AutoModpack installation
+				Installation.installAutomodpack(gameVersion, installLocation.getText());
+
 				SwingUtilities.invokeLater(() -> showInstalledMessage(loaderVersion.name, gameVersion));
 			} catch (Exception e) {
 				error(e);
 			} finally {
 				buttonInstall.setEnabled(true);
-			}
-
-			//String url = "https://cdn.modrinth.com/data/k68glP2e/versions/cq0ZLeYz/automodpack-mc1.20.1-fabric-3.3.6.jar";
-			String url = null;
-
-			try {
-				url = ModrinthAPI.getLatestDownloadUrl(gameVersion);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			Path mcPath = Paths.get(installLocation.getText());
-			Path targetDirectory = mcPath.resolve("mods");
-
-			try {
-				if (!Files.exists(targetDirectory)) {
-					Files.createDirectories(targetDirectory);
-				}
-
-				URL downloadUrl = new URL(url);
-				InputStream inputStream = null;
-
-				try {
-					inputStream = downloadUrl.openStream();
-					String fileName = downloadUrl.getFile();
-					Path targetFile = targetDirectory.resolve(fileName.substring(fileName.lastIndexOf('/') + 1)); // Ottieni solo il nome del file dal percorso completo
-					Files.copy(inputStream, targetFile, StandardCopyOption.REPLACE_EXISTING);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					if (inputStream != null) {
-						try {
-							inputStream.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}).start();
 	}

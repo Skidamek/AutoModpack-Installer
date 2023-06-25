@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.fabricmc.installer.modrinthAPI;
+package net.fabricmc.installer.automodpack;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,10 +31,13 @@ public class ModrinthAPI {
 	private static final String BASE_URL = "https://api.modrinth.com/v2/project/k68glP2e/version?loaders=[\"fabric\"]";
 	private static final List<String> gameVersionsFinal = new ArrayList<>();
 
-	public static String getLatestDownloadUrl(String gameVersion) throws IOException {
+	public static String getLatestDownloadUrl(String gameVersion) {
 		String apiUrl = buildApiUrl(gameVersion);
-		String response = getApiResponse(apiUrl);
-		Json json = Json.read(response);
+		Json json = fetchJson(apiUrl);
+		if (json == null) {
+			return null;
+		}
+
 		return extractDownloadUrl(json);
 	}
 

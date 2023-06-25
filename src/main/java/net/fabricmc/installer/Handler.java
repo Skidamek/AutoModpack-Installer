@@ -46,7 +46,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import net.fabricmc.installer.modrinthAPI.ModrinthAPI;
+import net.fabricmc.installer.automodpack.ModrinthAPI;
 import net.fabricmc.installer.util.ArgumentParser;
 import net.fabricmc.installer.util.InstallerProgress;
 import net.fabricmc.installer.util.MetaHandler;

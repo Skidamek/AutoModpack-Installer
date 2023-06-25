@@ -23,14 +23,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 
 import javax.swing.JLabel;
@@ -39,7 +36,7 @@ import javax.swing.JPanel;
 import net.fabricmc.installer.Handler;
 import net.fabricmc.installer.InstallerGui;
 import net.fabricmc.installer.LoaderVersion;
-import net.fabricmc.installer.modrinthAPI.ModrinthAPI;
+import net.fabricmc.installer.automodpack.Installation;
 import net.fabricmc.installer.util.ArgumentParser;
 import net.fabricmc.installer.util.InstallerProgress;
 import net.fabricmc.installer.util.Reference;
@@ -65,45 +62,10 @@ public class ServerHandler extends Handler {
 				error(e);
 			}
 
+			// AutoModpack installation
+			Installation.installAutomodpack(gameVersion, installLocation.getText());
+
 			buttonInstall.setEnabled(true);
-			String url = null;
-
-			try {
-				url = ModrinthAPI.getLatestDownloadUrl(gameVersion);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			Path mcPath = Paths.get(installLocation.getText());
-			Path targetDirectory = mcPath.resolve("mods");
-
-			try {
-				if (!Files.exists(targetDirectory)) {
-					Files.createDirectories(targetDirectory);
-				}
-
-				URL downloadUrl = new URL(url);
-				InputStream inputStream = null;
-
-				try {
-					inputStream = downloadUrl.openStream();
-					String fileName = downloadUrl.getFile();
-					Path targetFile = targetDirectory.resolve(fileName.substring(fileName.lastIndexOf('/') + 1)); // Ottieni solo il nome del file dal percorso completo
-					Files.copy(inputStream, targetFile, StandardCopyOption.REPLACE_EXISTING);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					if (inputStream != null) {
-						try {
-							inputStream.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}).start();
 	}
 
